@@ -15,12 +15,12 @@ public:
 	StepGenerator();
 	virtual void doStep(unsigned int elapsedTimeUnits);
 	virtual void update(unsigned int elapsedTimeUnits);
-	void setTimeUnitsPerStep(unsigned char timeUnits);
+	void setTimeUnitsPerStep(unsigned int timeUnits);
 private:
 	unsigned int lastStepTimeUnits_;
 };
 
-inline void StepGenerator::setTimeUnitsPerStep(unsigned char timeUnits) {
+inline void StepGenerator::setTimeUnitsPerStep(unsigned int timeUnits) {
 	timeUnitsPerStep_ = timeUnits;
 }
 
