@@ -47,4 +47,5 @@ void StepGenerator::update(unsigned int elapsedTimeUnits) {
 			stepCallback_();
 		}
 	}
+	closerToNextStep_ = (elapsedTimeUnits - lastStepTimeUnits_) > (timeUnitsPerStep_ / 2);
 }

@@ -31,6 +31,7 @@ void StepDivider::doStep(unsigned int elapsedTimeUnits) {
 
 		timeUnitsPerStep_ = ((elapsedTimeUnits - lastStepTimeUnits_) * division_) / (division_ - numberOfStepsToIgnore_);
 		numberOfStepsToIgnore_--;
+		closerToNextStep_ = numberOfStepsToIgnore_ <= (division_ / 2);
 		#ifdef DEBUG
 		printf("StepDivider::doStep - step Ignored - TimeUnitsPerStep %d\n", timeUnitsPerStep_);
 		#endif

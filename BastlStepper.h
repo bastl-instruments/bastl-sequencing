@@ -13,10 +13,12 @@ public:
 	BastlStepper();
 	void setStepCallback(void (*stepCallback)());
 	unsigned int getTimeUnitsPerStep();
+	bool isCloserToNextStep();
 	virtual void doStep(unsigned int elapsedTimeUnits) = 0;
 	virtual void update(unsigned int elapsedTimeUnits) = 0;
 protected:
 	unsigned int timeUnitsPerStep_;
+	bool closerToNextStep_;
 	void (*stepCallback_)();
 };
 
@@ -26,6 +28,10 @@ inline unsigned int BastlStepper::getTimeUnitsPerStep() {
 
 inline void BastlStepper::setStepCallback(void (*stepCallback)()) {
 	stepCallback_ = stepCallback;
+}
+
+inline bool BastlStepper::isCloserToNextStep() {
+	return closerToNextStep_;
 }
 
 #endif /* BASTLSTEPPER_H_ */

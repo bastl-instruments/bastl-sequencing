@@ -75,4 +75,5 @@ void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 		lastTriggeredStepTime_ = elapsedTimeUnits;
 		stepBufferCount_--;
 	}
+	closerToNextStep_ = (elapsedTimeUnits - lastTriggeredStepTime_) > (minTriggerTimeUnits_ / 2);
 }
