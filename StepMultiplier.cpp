@@ -16,7 +16,9 @@
 StepMultiplier::StepMultiplier() : lastSubStepTimeUnits_(0), multiplication_(2), stepsLeftToTrigger_(0), stepBufferCount_(0) , minTriggerTimeUnits_(0), anyStep_(false){
 }
 
-void StepMultiplier::init(unsigned int timeUnitsPerSecond) {
+void StepMultiplier::init(unsigned char multiplication, unsigned int minTriggerTime, unsigned int timeUnitsPerSecond) {
+	multiplication_ = multiplication;
+	minTriggerTimeUnits_ = minTriggerTime;
 	timeUnitsPerStep_ = (timeUnitsPerSecond * 60) / 120;
 	#ifdef DEBUG
 	printf("StepMultiplier::init - Setting timeUnitsPerStep %d\n", timeUnitsPerStep_);

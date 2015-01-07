@@ -13,7 +13,7 @@
 class StepMultiplier : public BastlStepper {
 public:
 	StepMultiplier();
-	virtual void init(unsigned int timeUnitsPerSecond);
+	virtual void init(unsigned char multiplication, unsigned int minTriggerTime, unsigned int timeUnitsPerSecond);
 	virtual void doStep(unsigned int elapsedTimeUnits);
 	virtual void update(unsigned int elapsedTimeUnits);
 	void setMultiplication(unsigned char multiplication);
