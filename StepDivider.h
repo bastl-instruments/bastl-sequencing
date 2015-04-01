@@ -16,6 +16,7 @@ public:
 	virtual void doStep(unsigned int elapsedTimeUnits);
 	virtual void update(unsigned int elapsedTimeUnits){}
 	void setDivision(unsigned char division);
+	unsigned int getEstimatedTimeToNextStep(unsigned int elapsedTimeUnits);
 protected:
 	unsigned char numberOfStepsToIgnore_;
 	unsigned int lastStepTimeUnits_;
