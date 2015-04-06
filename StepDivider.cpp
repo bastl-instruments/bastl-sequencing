@@ -38,6 +38,6 @@ void StepDivider::doStep(unsigned int elapsedTimeUnits) {
 	}
 }
 
-unsigned int StepDivider::getEstimatedTimeToNextStep(unsigned int elapsedTimeUnits) {
-	return timeUnitsPerStep_ - (elapsedTimeUnits - lastStepTimeUnits_);
+unsigned int StepDivider::getTimeSinceLastStep(unsigned int elapsedTimeUnits) {
+	return elapsedTimeUnits - lastStepTimeUnits_;
 }
