@@ -56,7 +56,7 @@ void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 			printf("StepMultiplier::update - TRIGGER!\n");
 			#endif
 			stepBufferCount_++;
-			unsigned char subStepsFromLastStep = (multiplication_ - stepsLeftToTrigger_);
+			unsigned char subStepsFromLastStep = (multiplication_ - stepsLeftToTrigger_); // this might happen to be negative !!!
 
 			//Next line is handling problems with rounding so instead of increasing the last triggered
 			//To the current time we increase it by division of the step multiplied by number of current step
