@@ -35,7 +35,16 @@ void StepMultiplier::doStep(unsigned int elapsedTimeUnits) {
 	lastStepTimeUnits_ = elapsedTimeUnits;
 	lastSubStepTimeUnits_ = elapsedTimeUnits;
 	stepBufferCount_++;
-	update(elapsedTimeUnits);
+
+	// It used to be an update here below as commented out but since
+	// it can leads to the situation where step is done twice
+	// with colliding call from interrupt and loop. That made
+	// instruments out of sync and therefore we removed it. It means
+	// that when we get external step it does not need to play
+	// exactly at that time but we measured that the difference will
+	// by typically < 1ms and in worst case when pattern is loaded
+	// at the same time it will be 8ms for current implementation
+	// [update(elapsedTimeUnits)]
 	anyStep_ = true;
 }
 
