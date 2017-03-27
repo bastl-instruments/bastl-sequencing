@@ -26,6 +26,7 @@ protected:
 	unsigned char stepsLeftToTrigger_;
 	unsigned char stepBufferCount_;
 	unsigned char minTriggerTimeUnits_;
+	bool doStepTriggered_;
 	bool anyStep_;
 
 };

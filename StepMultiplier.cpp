@@ -13,7 +13,7 @@
 #endif
 
 
-StepMultiplier::StepMultiplier() : lastSubStepTimeUnits_(0), multiplication_(2), stepsLeftToTrigger_(0), stepBufferCount_(0) , minTriggerTimeUnits_(0), anyStep_(false){
+StepMultiplier::StepMultiplier() : lastSubStepTimeUnits_(0), multiplication_(2), stepsLeftToTrigger_(0), stepBufferCount_(0) , minTriggerTimeUnits_(0), anyStep_(false), doStepTriggered_(false){
 }
 
 void StepMultiplier::init(unsigned char multiplication, unsigned int minTriggerTime, unsigned int timeUnitsPerSecond) {
@@ -27,43 +27,36 @@ void StepMultiplier::init(unsigned char multiplication, unsigned int minTriggerT
 
 void StepMultiplier::doStep(unsigned int elapsedTimeUnits) {
 
-	stepBufferCount_ += stepsLeftToTrigger_;
-	stepsLeftToTrigger_ = (multiplication_ - 1);
+	// We just make sure main loop thread knows something has happened
+	// and can process forced step
 	if (anyStep_) {
 		timeUnitsPerStep_ = elapsedTimeUnits - lastStepTimeUnits_;
 	}
 	lastStepTimeUnits_ = elapsedTimeUnits;
-	lastSubStepTimeUnits_ = elapsedTimeUnits;
-	stepBufferCount_++;
-
-	// It used to be an update here below as commented out but since
-	// it can leads to the situation where step is done twice
-	// with colliding call from interrupt and loop. That made
-	// instruments out of sync and therefore we removed it. It means
-	// that when we get external step it does not need to play
-	// exactly at that time but we measured that the difference will
-	// by typically < 1ms and in worst case when pattern is loaded
-	// at the same time it will be 8ms for current implementation
-	// [update(elapsedTimeUnits)]
 	anyStep_ = true;
+	doStepTriggered_ = true;
 }
 
 void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 
-	// We check if we should add some more steps to the buffer
-	if (stepsLeftToTrigger_ != 0) {
-		#ifdef DEBUG
-		printf("StepMultiplier::update - Something left to trigger %d\n", stepsLeftToTrigger_);
-		printf("StepMultiplier::update - Elapsed : %d LastSubstep: %d Multiplication %d, SubStepLength: %d \n",
-				elapsedTimeUnits,
-				lastSubStepTimeUnits_,
-				multiplication_,
-				(timeUnitsPerStep_ / multiplication_));
-		#endif
+	// If we have some forced trigger we need to process it here
+	if (doStepTriggered_) {
+		doStepTriggered_ = false;
+		// If we get step that shall play we need to add this step
+		stepsLeftToTrigger_ ++;
+		// And also all that are left to be do
+		stepBufferCount_ += stepsLeftToTrigger_;
+		// And we need to mark that we shall play some more steps
+		stepsLeftToTrigger_ = (multiplication_ - 1);
+		//And we mark the time we played this step
+		lastSubStepTimeUnits_ = elapsedTimeUnits;
+	}
+	// Otherwise we check if we should add some more steps to the buffer
+	// using standard procedure
+	else if (stepsLeftToTrigger_ != 0) {
+
 		if ((elapsedTimeUnits - lastSubStepTimeUnits_) > (timeUnitsPerStep_ / multiplication_)) {
-			#ifdef DEBUG
-			printf("StepMultiplier::update - TRIGGER!\n");
-			#endif
+
 			stepBufferCount_++;
 			unsigned char subStepsFromLastStep = (multiplication_ - stepsLeftToTrigger_); // this might happen to be negative !!!
 
