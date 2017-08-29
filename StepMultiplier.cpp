@@ -12,14 +12,9 @@
 #include <iostream>
 #endif
 
-
-StepMultiplier::StepMultiplier() : lastSubStepTimeUnits_(0), multiplication_(2), stepsLeftToTrigger_(0), stepBufferCount_(0) , minTriggerTimeUnits_(0), anyStep_(false), doStepTriggered_(false){
-}
-
-void StepMultiplier::init(unsigned char multiplication, unsigned int minTriggerTime, unsigned int timeUnitsPerSecond) {
-	multiplication_ = multiplication;
-	minTriggerTimeUnits_ = minTriggerTime;
+StepMultiplier::StepMultiplier(void (*stepCallback)(), StepSwinger * _swinger, unsigned char minTriggerTime, unsigned int timeUnitsPerSecond) : BastlStepper(stepCallback, _swinger) {
 	timeUnitsPerStep_ = (timeUnitsPerSecond * 60) / 120;
+	minTriggerTimeUnits_ = minTriggerTime;
 	#ifdef DEBUG
 	printf("StepMultiplier::init - Setting timeUnitsPerStep %d\n", timeUnitsPerStep_);
 	#endif

@@ -12,7 +12,6 @@
 
 class StepDivider : public BastlStepper {
 public:
-	StepDivider();
 	virtual void doStep(unsigned int elapsedTimeUnits);
 	virtual void update(unsigned int elapsedTimeUnits){}
 	void setDivision(unsigned char division);

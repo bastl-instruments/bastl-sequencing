@@ -7,5 +7,7 @@
 
 #include "BastlStepper.h"
 
-BastlStepper::BastlStepper() : timeUnitsPerStep_(0), stepCallback_(0), closerToNextStep_(false){
+BastlStepper:: BastlStepper(void (*stepCallback)(), StepSwinger * _swinger) {
+	stepCallback_ = stepCallback;
+	swinger_ = _swinger;
 }

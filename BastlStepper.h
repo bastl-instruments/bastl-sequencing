@@ -8,10 +8,11 @@
 #ifndef BASTLSTEPPER_H_
 #define BASTLSTEPPER_H_
 
+#include "StepSwinger.h"
+
 class BastlStepper {
 public:
-	BastlStepper();
-	void setStepCallback(void (*stepCallback)());
+	BastlStepper (void (*stepCallback)(), StepSwinger * _swinger);
 	unsigned int getTimeUnitsPerStep();
 	bool isCloserToNextStep();
 	virtual void doStep(unsigned int elapsedTimeUnits) = 0;
@@ -20,14 +21,11 @@ protected:
 	unsigned int timeUnitsPerStep_;
 	bool closerToNextStep_;
 	void (*stepCallback_)();
+	StepSwinger * swinger_;
 };
 
 inline unsigned int BastlStepper::getTimeUnitsPerStep() {
 	return timeUnitsPerStep_;
-}
-
-inline void BastlStepper::setStepCallback(void (*stepCallback)()) {
-	stepCallback_ = stepCallback;
 }
 
 inline bool BastlStepper::isCloserToNextStep() {
