@@ -12,22 +12,27 @@
 
 class StepMultiplier : public BastlStepper {
 public:
-	StepMultiplier(void (*stepCallback)(), StepSwinger * _swinger, unsigned char minTriggerTime, unsigned int timeUnitsPerSecond);
+	StepMultiplier(void (*stepCallback)(), StepSwinger * _swinger, unsigned int timeUnitsPerSecond);
 	virtual void doStep(unsigned int elapsedTimeUnits);
 	virtual void update(unsigned int elapsedTimeUnits);
+	virtual void reset();
 	void setMultiplication(unsigned char multiplication);
 protected:
 	unsigned int lastStepTimeUnits_;
 	unsigned int lastSubStepTimeUnits_;
-	unsigned int lastTriggeredStepTime_;
 	unsigned char multiplication_;
 	unsigned char stepsLeftToTrigger_;
-	unsigned char stepBufferCount_;
-	unsigned char minTriggerTimeUnits_;
-	bool doStepTriggered_;
+	bool gotSyncStep_;
 	bool anyStep_;
+	bool gotStep_;
+	unsigned char stepsReceived_;
+
 
 };
+
+inline void StepMultiplier::reset() {
+	stepsReceived_ = 0;
+}
 
 inline void StepMultiplier::setMultiplication(unsigned char multiplication) {
 	multiplication_ = multiplication;

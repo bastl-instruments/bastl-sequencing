@@ -17,6 +17,7 @@ public:
 	bool isCloserToNextStep();
 	virtual void doStep(unsigned int elapsedTimeUnits) = 0;
 	virtual void update(unsigned int elapsedTimeUnits) = 0;
+	virtual void reset(){};
 protected:
 	unsigned int timeUnitsPerStep_;
 	bool closerToNextStep_;
