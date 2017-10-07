@@ -27,35 +27,32 @@ void StepMultiplier::doStep(unsigned int elapsedTimeUnits) {
 
 	// We just make sure main loop thread knows something has happened
 	// and can process forced step
-	if (anyStep_) {
-		timeUnitsPerStep_ = elapsedTimeUnits - lastStepTimeUnits_;
-	}
-	lastStepTimeUnits_ = elapsedTimeUnits;
 	anyStep_ = true;
 	gotStep_ = true;
-	gotSyncStep_ = (stepsReceived_ * multiplication_) % 8 == 0;
-	stepsReceived_ = (stepsReceived_ + 1) % 8;
 }
 
 void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 
-	if (gotSyncStep_) {
-		for (unsigned char stepNumber = 0; stepNumber <= stepsLeftToTrigger_; stepNumber++) {
-			stepCallback_();
-		}
-		stepsLeftToTrigger_ = 0;
-		lastSubStepTimeUnits_ = lastStepTimeUnits_;
-	}
 	if (gotStep_) {
-		stepsLeftToTrigger_ += multiplication_;
-		if (gotSyncStep_)
-			stepsLeftToTrigger_--;
 		gotStep_ = false;
+		if (anyStep_) {
+			timeUnitsPerStep_ = (elapsedTimeUnits - lastStepTimeUnits_) / multiplication_;
+		}
+		lastStepTimeUnits_ = elapsedTimeUnits;
+		bool sync = (stepsReceived_ * multiplication_) % 8 == 0;
+		stepsReceived_++;
+		if (sync) {
+			for (unsigned char stepNumber = 0; stepNumber <= stepsLeftToTrigger_; stepNumber++) {
+				stepCallback_();
+			}
+			stepsLeftToTrigger_ = 0;
+			lastSubStepTimeUnits_ = lastStepTimeUnits_;
+		}
+		stepsLeftToTrigger_ += multiplication_;
+		if (sync)
+			stepsLeftToTrigger_--;
 	}
-	gotSyncStep_ = false;
-
-	//unsigned int timeFromLastStep = elapsedTimeUnits - lastSubStepTimeUnits_;
-	unsigned int nextStepTime = swinger_->getNextStepLength((timeUnitsPerStep_ * 4) / (unsigned int)multiplication_);
+	unsigned int nextStepTime = swinger_->getNextStepLength(timeUnitsPerStep_ * 4);
 	if ((stepsLeftToTrigger_ != 0) &&
 		(elapsedTimeUnits - lastSubStepTimeUnits_ > nextStepTime)) {
 		stepCallback_();
@@ -63,5 +60,5 @@ void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 		lastSubStepTimeUnits_ += nextStepTime;
 	}
 	//Need to do something with this one
-	//closerToNextStep_ = (elapsedTimeUnits - lastTriggeredStepTime_) > (minTriggerTimeUnits_ / 2);
+	closerToNextStep_ = (elapsedTimeUnits - lastSubStepTimeUnits_) > (nextStepTime / 2);
 }
