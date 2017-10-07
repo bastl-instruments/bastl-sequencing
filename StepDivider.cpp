@@ -12,9 +12,6 @@
 #include <iostream>
 #endif
 
-StepDivider::StepDivider() : BastlStepper(), numberOfStepsToIgnore_(0), lastStepTimeUnits_(0), division_(0){
-}
-
 void StepDivider::doStep(unsigned int elapsedTimeUnits) {
 	if (numberOfStepsToIgnore_ == 0) {
 		if (stepCallback_ != 0) {

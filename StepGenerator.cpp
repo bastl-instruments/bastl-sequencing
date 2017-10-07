@@ -12,7 +12,10 @@
 #include <iostream>
 #endif
 
-StepGenerator::StepGenerator() : BastlStepper(), lastStepTimeUnits_(0){
+StepGenerator::StepGenerator(void (*_stepCallback)(), StepSwinger * _swinger) :
+BastlStepper(_stepCallback, _swinger),
+lastStepTimeUnits_(0), started_(false)
+{
 }
 
 void StepGenerator::doStep(unsigned int elapsedTimeUnits) {
@@ -38,14 +41,20 @@ void StepGenerator::doStep(unsigned int elapsedTimeUnits) {
 }
 
 void StepGenerator::update(unsigned int elapsedTimeUnits) {
-	if (elapsedTimeUnits - lastStepTimeUnits_ > timeUnitsPerStep_) {
-		lastStepTimeUnits_ = elapsedTimeUnits - ((elapsedTimeUnits - lastStepTimeUnits_) % timeUnitsPerStep_);
-		#ifdef DEBUG
-		printf("StepGenerator::update - TRIGGER! elapsed: %d, timeUnitsPerStep: %d, currentStep %d\n", elapsedTimeUnits, timeUnitsPerStep_, lastStepTimeUnits_);
-		#endif
-		if (stepCallback_ != 0) {
+	if (!started_) {
+		started_ = true;
+		stepCallback_();
+		nextStepInTimeUnits_ = swinger_->getNextStepLength(timeUnitsPerStep_ * 4);
+		lastStepTimeUnits_ = elapsedTimeUnits;
+	} else {
+		if (elapsedTimeUnits - lastStepTimeUnits_  > nextStepInTimeUnits_) {
+			lastStepTimeUnits_ += nextStepInTimeUnits_;
+			nextStepInTimeUnits_ = swinger_->getNextStepLength(timeUnitsPerStep_ * 4);
+			#ifdef DEBUG
+			printf("StepGenerator::update - TRIGGER! elapsed: %d, timeUnitsPerStep: %d, currentStep %d\n", elapsedTimeUnits, timeUnitsPerStep_, lastStepTimeUnits_);
+			#endif
 			stepCallback_();
 		}
+		closerToNextStep_ = (elapsedTimeUnits - lastStepTimeUnits_) > (nextStepInTimeUnits_ / 2);
 	}
-	closerToNextStep_ = (elapsedTimeUnits - lastStepTimeUnits_) > (timeUnitsPerStep_ / 2);
 }
