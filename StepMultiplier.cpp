@@ -27,7 +27,6 @@ void StepMultiplier::doStep(unsigned int elapsedTimeUnits) {
 
 	// We just make sure main loop thread knows something has happened
 	// and can process forced step
-	anyStep_ = true;
 	gotStep_ = true;
 }
 
@@ -38,6 +37,7 @@ void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 		if (anyStep_) {
 			timeUnitsPerStep_ = (elapsedTimeUnits - lastStepTimeUnits_) / multiplication_;
 		}
+		anyStep_ = true;
 		lastStepTimeUnits_ = elapsedTimeUnits;
 		bool sync = (stepsReceived_ * multiplication_) % 8 == 0;
 		stepsReceived_++;
