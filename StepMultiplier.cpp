@@ -18,6 +18,7 @@ StepMultiplier::StepMultiplier(void (*stepCallback)(), StepSwinger * _swinger, u
 	gotStep_ = false;
 	gotSyncStep_ = false;
 	stepsReceived_ = 0;
+	stepsLeftToTrigger_ = 0;
 	#ifdef DEBUG
 	printf("StepMultiplier::init - Setting timeUnitsPerStep %d\n", timeUnitsPerStep_);
 	#endif
