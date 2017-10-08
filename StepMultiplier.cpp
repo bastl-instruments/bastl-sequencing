@@ -40,7 +40,7 @@ void StepMultiplier::update(unsigned int elapsedTimeUnits) {
 		}
 		anyStep_ = true;
 		lastStepTimeUnits_ = elapsedTimeUnits;
-		bool sync = (stepsReceived_ * multiplication_) % 8 == 0;
+		bool sync = (!swinger_->swingUsed()) || ((stepsReceived_ * multiplication_) % 8 == 0);
 		stepsReceived_++;
 		if (sync) {
 			for (unsigned char stepNumber = 0; stepNumber <= stepsLeftToTrigger_; stepNumber++) {

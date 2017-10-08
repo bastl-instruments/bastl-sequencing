@@ -18,6 +18,7 @@ public:
 	void init(StepSynchronizer * synchronizer_);
 	void setSwing(unsigned char value);
 	unsigned int getNextStepLength(unsigned int swinglessStepLength);
+	bool swingUsed();
 
 private:
 	unsigned char swingValue;
@@ -30,6 +31,9 @@ inline void StepSwinger::setSwing(unsigned char value) {
 
 inline void StepSwinger::init(StepSynchronizer * synchronizer_) {
 	synchronizer = synchronizer_;
+}
+inline bool StepSwinger::swingUsed() {
+	return swingValue != 0;
 }
 
 #endif /* STEPSWINGER_H_ */
