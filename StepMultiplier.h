@@ -31,6 +31,7 @@ protected:
 };
 
 inline void StepMultiplier::reset() {
+	stepsLeftToTrigger_ = 0;
 	stepsReceived_ = 0;
 }
 
