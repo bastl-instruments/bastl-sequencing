@@ -49,6 +49,9 @@ void StepGenerator::update(unsigned int elapsedTimeUnits) {
 	} else {
 		if (elapsedTimeUnits - lastStepTimeUnits_  > nextStepInTimeUnits_) {
 			lastStepTimeUnits_ += nextStepInTimeUnits_;
+			leftovers_ += timeUnitsPerStepLeftovers_;
+			lastStepTimeUnits_ += leftovers_ / 1000;
+			leftovers_ = leftovers_ % 1000;
 			nextStepInTimeUnits_ = swinger_->getNextStepLength(timeUnitsPerStep_ * 4);
 			#ifdef DEBUG
 			printf("StepGenerator::update - TRIGGER! elapsed: %d, timeUnitsPerStep: %d, currentStep %d\n", elapsedTimeUnits, timeUnitsPerStep_, lastStepTimeUnits_);
