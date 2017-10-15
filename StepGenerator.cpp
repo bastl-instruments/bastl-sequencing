@@ -46,6 +46,7 @@ void StepGenerator::update(unsigned int elapsedTimeUnits) {
 		stepCallback_();
 		nextStepInTimeUnits_ = swinger_->getNextStepLength(timeUnitsPerStep_ * 4);
 		lastStepTimeUnits_ = elapsedTimeUnits;
+		leftovers_ = 0;
 	} else {
 		if (elapsedTimeUnits - lastStepTimeUnits_  > nextStepInTimeUnits_) {
 			lastStepTimeUnits_ += nextStepInTimeUnits_;
